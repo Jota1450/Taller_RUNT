@@ -12,8 +12,6 @@ namespace Taller_RUNT
     public partial class WebForm1 : System.Web.UI.Page
     {
         private SqlConnection con;
-        private SqlDataAdapter da;
-        static DataTable dt;
         private SqlCommand cmd;
 
         protected void Page_Load(object sender, EventArgs e)
@@ -23,10 +21,6 @@ namespace Taller_RUNT
             DropDownList9.DataBind();
         }
 
-        protected void TextBox1_TextChanged(object sender, EventArgs e)
-        {
-
-        }
 
         protected void RadioButtonList1_SelectedIndexChanged(object sender, EventArgs e)
         {
@@ -54,10 +48,17 @@ namespace Taller_RUNT
             con.Open();
         }
 
+        public void abrirConexion()
+        {
+            con.Open();
+        }
+
         public void Desconectar()
         {
             con.Close();
-        }
+            con = null;
+            cmd = null;
+    }
 
         public void CrearComando(string consulta)
         {
@@ -71,14 +72,20 @@ namespace Taller_RUNT
 
         public int EjecutarComando()
         {
-            return cmd.ExecuteNonQuery();
+            int id = Convert.ToInt32(cmd.ExecuteScalar());
+
+            if (con.State == System.Data.ConnectionState.Open)
+                Desconectar();
+
+            return id;
         }
 
         protected void Button1_Click(object sender, EventArgs e)
         {
             String nombre, ciudad, codigo, fechaTramite, placa, tramite, maquinaria, marca, linea, tipo, traccion, colores,
                 modelo, peso, largo, ancho, alto, capacidadCarga, cabina, noMotor, regrabado, noIdentificacion, noEjes, importRemate,
-                noDocumento, fechaImportRemate, tipoCombustible, datosAlerta;
+                noDocumento, fechaImportRemate, tipoCombustible, datosAlerta, primerApellido, segundoApellido,
+                tipoDocumento, direccion, telefono;
 
 
             nombre = TextBox1.Text;
@@ -121,7 +128,7 @@ namespace Taller_RUNT
                 "(@nombre, @ciudad, @codigo, @fechaTramite, @placa, @tramite, @maquinaria, @marca, @linea, @tipo, " +
                 "@traccion, @colores, @modelo, @peso, @largo, @ancho, @alto, @capacidadCarga, @cabina, @noMotor, " +
                 "@regrabado, @noIdentificacion, @noEjes, @importRemate, @noDocumento, @fechaImportRemate, " +
-                "@tipoCombustible, @datosAlerta);");
+                "@tipoCombustible, @datosAlerta);SELECT SCOPE_IDENTITY();");
             AsignarParametro("@nombre", SqlDbType.VarChar, nombre);
             AsignarParametro("@ciudad", SqlDbType.VarChar, ciudad);
             AsignarParametro("@codigo", SqlDbType.VarChar, codigo);
@@ -151,7 +158,67 @@ namespace Taller_RUNT
             AsignarParametro("@tipoCombustible", SqlDbType.VarChar, tipoCombustible);
             AsignarParametro("@datosAlerta", SqlDbType.VarChar, datosAlerta);
 
-            int x = EjecutarComando();
+            int solicitud_id = EjecutarComando();
+            //Label1.Text = solicitud_id + "";
+
+            //Propietario
+            primerApellido = TextBox19.Text;
+            segundoApellido = TextBox28.Text;
+            nombre = TextBox29.Text;
+            tipoDocumento = DropDownList6.SelectedValue;
+            noDocumento = TextBox30.Text;
+            direccion = TextBox33.Text;
+            ciudad = TextBox34.Text; 
+            telefono = TextBox35.Text;
+
+            Conectar();
+            CrearComando("INSERT INTO Propietario" +
+                "(solicitud_id, primerApellido, segundoApellido, nombre, " +
+                "tipoDocumento, noDocumento, direccion, ciudad, telefono)" +
+                "VALUES" +
+                "(@solicitud_id, @primerApellido, @segundoApellido, @nombre, " +
+                "@tipoDocumento, @noDocumento, @direccion, @ciudad, @telefono);" +
+                "SELECT SCOPE_IDENTITY();");
+            AsignarParametro("@solicitud_id", SqlDbType.Int, solicitud_id);
+            AsignarParametro("@primerApellido", SqlDbType.VarChar, primerApellido);
+            AsignarParametro("@segundoApellido", SqlDbType.VarChar, segundoApellido);
+            AsignarParametro("@nombre", SqlDbType.VarChar, nombre);
+            AsignarParametro("@tipoDocumento", SqlDbType.VarChar, tipoDocumento);
+            AsignarParametro("@noDocumento", SqlDbType.VarChar, noDocumento);
+            AsignarParametro("@direccion", SqlDbType.VarChar, direccion);
+            AsignarParametro("@ciudad", SqlDbType.VarChar, ciudad);
+            AsignarParametro("@telefono", SqlDbType.VarChar, telefono);
+            EjecutarComando();
+
+            // Comprador
+            primerApellido = TextBox20.Text;
+            segundoApellido = TextBox21.Text;
+            nombre = TextBox22.Text;
+            tipoDocumento = DropDownList8.SelectedValue;
+            noDocumento = TextBox24.Text;
+            direccion = TextBox23.Text;
+            ciudad = TextBox35.Text;
+            telefono = TextBox26.Text;
+
+            Conectar();
+            CrearComando("INSERT INTO Comprador" +
+                "(solicitud_id, primerApellido, segundoApellido, nombre, " +
+                "tipoDocumento, noDocumento, direccion, ciudad, telefono)" +
+                "VALUES" +
+                "(@solicitud_id, @primerApellido, @segundoApellido, @nombre, " +
+                "@tipoDocumento, @noDocumento, @direccion, @ciudad, @telefono);" +
+                "SELECT SCOPE_IDENTITY();");
+            AsignarParametro("@solicitud_id", SqlDbType.Int, solicitud_id);
+            AsignarParametro("@primerApellido", SqlDbType.VarChar, primerApellido);
+            AsignarParametro("@segundoApellido", SqlDbType.VarChar, segundoApellido);
+            AsignarParametro("@nombre", SqlDbType.VarChar, nombre);
+            AsignarParametro("@tipoDocumento", SqlDbType.VarChar, tipoDocumento);
+            AsignarParametro("@noDocumento", SqlDbType.VarChar, noDocumento);
+            AsignarParametro("@direccion", SqlDbType.VarChar, direccion);
+            AsignarParametro("@ciudad", SqlDbType.VarChar, ciudad);
+            AsignarParametro("@telefono", SqlDbType.VarChar, telefono);
+            EjecutarComando();
+
 
 
         }

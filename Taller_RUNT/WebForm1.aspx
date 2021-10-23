@@ -18,7 +18,7 @@
                 </div>
                 <div class="col-12">
                     <label for="inputAddress2" class="form-label">Nombre</label>
-                    <asp:TextBox ID="TextBox1" runat="server" class="form-control" Width="450px" OnTextChanged="TextBox1_TextChanged">Servicios Integrales para la Movilidad - SIM</asp:TextBox>
+                    <asp:TextBox ID="TextBox1" runat="server" class="form-control" Width="450px">Servicios Integrales para la Movilidad - SIM</asp:TextBox>
                 </div>
                 <div class="col-md-4">
                     <label for="inputAddress2" class="form-label">Ciudad</label>
@@ -377,7 +377,9 @@
 
                 <div class="col-12">
                     <asp:Button ID="Button1" class="btn btn-primary" runat="server" Text="Enviar" OnClick="Button1_Click" />
+                    <asp:Label ID="Label1" runat="server" Text="Label"></asp:Label>
                 </div>
+                
             </form>
 
         </div>
